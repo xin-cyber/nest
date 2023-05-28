@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Injectable()
+@Injectable() // 标识此类可以被注入，由Nest的IoC容器管理，UserModule中注入（provider）
 export class UserService {
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';

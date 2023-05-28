@@ -1,31 +1,24 @@
 import {
-    Controller,
-    Request,
-    Query,
-    Get,
-    Post,
     Body,
-    Patch,
-    Param,
-    Delete,
+    Controller,
+    Get,
     Headers,
     HttpCode,
-    Req,
-    Res,
     Inject,
+    Param,
+    Post,
+    Query,
 } from '@nestjs/common';
-import * as svgCaptcha from 'svg-captcha';
+
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
-    // module注入后，userService可以是任意值，找到ioc中间容器保存映射，key是UserService，找到对应的实例对象
+    // module注入后，userService可以是任意值，找到ioc中间容器保存映射，key是UserService，找到对应的实例对象,
     // this.userService可以直接使用该类的实例化对象，无需手动实例化
     // inject别名，解析JX
     constructor(
-        @Inject('JX') private readonly userService: UserService,
+        @Inject('JX') private readonly userService: UserService, // 注入，并且是单例模式，如果该Service在其它地方也被用过，那么会在不会重新创建对象，各个应用只会有一个该Service的对象，容器会先寻找当前有没有，如果没有再进行创建
         @Inject('XJ') private ShopList: string[],
         @Inject('Test') private readonly test: string,
     ) {}

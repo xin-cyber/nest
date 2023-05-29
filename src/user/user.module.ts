@@ -1,8 +1,14 @@
-import { Module } from '@nestjs/common';
+import {
+    Module,
+    NestModule,
+    MiddlewareConsumer,
+    RequestMethod,
+} from '@nestjs/common';
 
 import { AppService2 } from '../app.service2';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { LoggerMiddleware } from '../logger/logger.middleware';
 
 @Module({
     // imports: [OtherModule], 意味着OtherModule里exports的provider，可以在UserModule中使用
@@ -36,4 +42,11 @@ import { UserService } from './user.service';
     ],
     // exports:[AppService2] // exports可以使用provider本身，亦可以使用provider的token
 })
-export class UserModule {}
+export class UserModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggerMiddleware).forRoutes({
+            path: 'user',
+            method: RequestMethod.GET,
+        }); ///直接传入UserController，所有的都被拦截了
+    }
+}

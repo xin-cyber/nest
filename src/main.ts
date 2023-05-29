@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 
+import * as cors from 'cors'; //跨域
 import { AppModule } from './app.module';
 
 const whiteList = ['/list'];
@@ -16,6 +17,7 @@ function middleWareAll(req, res, next) {
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.use(cors());
     app.use(middleWareAll);
     await app.listen(3000);
 

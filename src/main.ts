@@ -1,9 +1,22 @@
 import { NestFactory } from '@nestjs/core';
+
 import { AppModule } from './app.module';
-import * as session from 'express-session';
+
+const whiteList = ['/list'];
+
+// 全局中间件
+function middleWareAll(req, res, next) {
+    console.log(req.originalUrl, '我收全局的');
+    if (whiteList.includes(req.originalUrl)) {
+        next();
+    } else {
+        res.send('全局中间件拦截黑名单');
+    }
+}
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.use(middleWareAll);
     await app.listen(3000);
 
     // app.use(

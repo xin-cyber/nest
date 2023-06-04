@@ -2,23 +2,30 @@ import { NestFactory } from '@nestjs/core';
 
 import * as cors from 'cors'; //跨域
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 const whiteList = ['/list'];
 
 // 全局中间件
-function middleWareAll(req, res, next) {
-    console.log(req.originalUrl, '我收全局的');
-    if (whiteList.includes(req.originalUrl)) {
-        next();
-    } else {
-        res.send('全局中间件拦截黑名单');
-    }
-}
+// function middleWareAll(req, res, next) {
+//     console.log(req.originalUrl, '我收全局的');
+//     if (whiteList.includes(req.originalUrl)) {
+//         next();
+//     } else {
+//         res.send('全局中间件拦截黑名单');
+//     }
+// }
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
-    app.use(cors());
-    app.use(middleWareAll);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    // app.use(cors());
+    // app.use(middleWareAll);
+    // 访问upload/album 上传的静态资源图片
+    // localhost:3000/jx/图片名
+    app.useStaticAssets(join(__dirname, 'images'), {
+        prefix: '/jx',
+    });
     await app.listen(3000);
 
     // app.use(

@@ -4,6 +4,8 @@ import * as cors from 'cors'; //跨域
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { Response } from './common/response';
+import { HttpFilter } from './common/filter';
 
 const whiteList = ['/list'];
 
@@ -20,13 +22,16 @@ const whiteList = ['/list'];
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     // app.use(cors());
-    // app.use(middleWareAll);
+    // app.use(middleWareAll); // 全局中间件
+    app.useGlobalInterceptors(new Response()); // 全局拦截器，处理返回data
+    app.useGlobalFilters(new HttpFilter());
+
     // 访问upload/album 上传的静态资源图片
     // localhost:3000/jx/图片名
     app.useStaticAssets(join(__dirname, 'images'), {
         prefix: '/jx',
     });
-    await app.listen(3000);
+    await app.listen(9985);
 
     // app.use(
     //     session({

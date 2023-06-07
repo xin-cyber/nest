@@ -6,6 +6,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { Response } from './common/response';
 import { HttpFilter } from './common/filter';
+import { ValidationPipe } from '@nestjs/common';
 
 const whiteList = ['/list'];
 
@@ -24,14 +25,16 @@ async function bootstrap() {
     // app.use(cors());
     // app.use(middleWareAll); // 全局中间件
     app.useGlobalInterceptors(new Response()); // 全局拦截器，处理返回data
-    app.useGlobalFilters(new HttpFilter());
+    // app.useGlobalFilters(new HttpFilter());
 
     // 访问upload/album 上传的静态资源图片
     // localhost:3000/jx/图片名
     app.useStaticAssets(join(__dirname, 'images'), {
         prefix: '/jx',
     });
-    await app.listen(9985);
+
+    app.useGlobalPipes(new ValidationPipe());
+    await app.listen(3000);
 
     // app.use(
     //     session({

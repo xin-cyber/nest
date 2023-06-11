@@ -7,6 +7,7 @@ import { join } from 'path';
 import { Response } from './common/response';
 import { HttpFilter } from './common/filter';
 import { ValidationPipe } from '@nestjs/common';
+import { RoleGuard } from './guard/role/role.guard';
 
 const whiteList = ['/list'];
 
@@ -24,6 +25,7 @@ async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     // app.use(cors());
     // app.use(middleWareAll); // 全局中间件
+    // app.useGlobalGuards(new RoleGuard()); // 全局守卫
     app.useGlobalInterceptors(new Response()); // 全局拦截器，处理返回data
     // app.useGlobalFilters(new HttpFilter());
 

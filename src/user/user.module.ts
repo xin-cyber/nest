@@ -1,17 +1,18 @@
 import {
+    MiddlewareConsumer,
     Module,
     NestModule,
-    MiddlewareConsumer,
     RequestMethod,
 } from '@nestjs/common';
 
 import { AppService2 } from '../app.service2';
+import { LoggerMiddleware } from '../logger/logger.middleware';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { LoggerMiddleware } from '../logger/logger.middleware';
 
+// @Global
 @Module({
-    // imports: [OtherModule], 意味着OtherModule里exports的provider，可以在UserModule中使用
+    // imports: [OtherModule], 意味着OtherModule里exports的service类，可以在provider中的AppService2等service类中使用
     controllers: [UserController],
     // 简写形式
     // providers: [UserService]  // 提供依赖项并且是单例模式，将类交由ico容器创建实例

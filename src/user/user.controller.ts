@@ -12,7 +12,7 @@ import {
 
 import { UserService } from './user.service';
 
-@Controller('user')
+@Controller('user') //  Controller 只需要被注入
 export class UserController {
     // module注入后，userService可以是任意值，找到ioc中间容器保存映射，key是UserService，找到对应的实例对象,
     // this.userService可以直接使用该类的实例化对象，无需手动实例化
@@ -33,6 +33,7 @@ export class UserController {
 
     @Get()
     findAll(@Query() req) {
+        
         console.log(req);
         // return {
         //     code: 200,

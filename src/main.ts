@@ -1,13 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-
-import * as cors from 'cors'; //跨域
-import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
-import { Response } from './common/response';
-import { HttpFilter } from './common/filter';
-import { ValidationPipe } from '@nestjs/common';
-import { RoleGuard } from './guard/role/role.guard';
+
+import { AppModule } from './app.module';
 
 const whiteList = ['/list'];
 
@@ -26,18 +20,19 @@ async function bootstrap() {
     // app.use(cors());
     // app.use(middleWareAll); // 全局中间件
     // app.useGlobalGuards(new RoleGuard()); // 全局守卫
-    app.useGlobalInterceptors(new Response()); // 全局拦截器，处理返回data
+    // app.useGlobalInterceptors(new Response()); // 全局拦截器，处理返回data
     // app.useGlobalFilters(new HttpFilter());
 
     // 访问upload/album 上传的静态资源图片
     // localhost:3000/jx/图片名
-    app.useStaticAssets(join(__dirname, 'images'), {
-        prefix: '/jx',
-    });
+    // app.useStaticAssets(join(__dirname, 'images'), {
+    //     prefix: '/jx',
+    // });
 
-    app.useGlobalPipes(new ValidationPipe());
+    // app.useGlobalPipes(new ValidationPipe());
     await app.listen(3000);
 
+    // session方式
     // app.use(
     //     session({
     //         resave: false, //添加 resave 选项

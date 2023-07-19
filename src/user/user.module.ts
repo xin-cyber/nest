@@ -4,14 +4,17 @@ import {
     NestModule,
     RequestMethod,
 } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppService2 } from '../app.service2';
 import { LoggerMiddleware } from '../logger/logger.middleware';
+import { User } from './entities/user.entity';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 // @Global
 @Module({
+    imports: [TypeOrmModule.forFeature([User])],
     // imports: [OtherModule], 意味着OtherModule里exports的service类，可以在provider中的AppService2等service类中使用
     controllers: [UserController],
     // 简写形式

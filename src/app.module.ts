@@ -10,9 +10,16 @@ import { MysqlModule } from './mysql/mysql.module';
 import { UploadModule } from './upload/upload.module';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
+import { ConfigModule } from '@nestjs/config';
+import config from './config';
+import { createClient } from 'redis';
 
 @Module({
     imports: [
+        // 动态配置数据库
+        ConfigModule.forRoot({
+            load: [config],
+        }),
         UserModule,
         UploadModule,
         LoginModule,
@@ -22,6 +29,7 @@ import { UserModule } from './user/user.module';
             username: 'root', //账号
             password: '123456', //密码
             host: 'localhost', //host
+            // host: "mysql-container",
             port: 3306, //
             database: 'login_test', //库名
             logging: true, // 日志
@@ -34,7 +42,7 @@ import { UserModule } from './user/user.module';
         MysqlModule,
         // JwtModule 是一个动态模块，通过 register 传入 option,
         JwtModule.register({
-            global: true, // 声明为全局模块 , 这样就不用每个模块都引入它了
+            global: true, // 声明为全局模块 , 这样就不用每个模块都引入它了（其他模块直接forRoot,否则则需要register）
             secret: '_jx', // 加密秘钥
             signOptions: {
                 expiresIn: '7d', // token 过期时间 7天
@@ -54,6 +62,23 @@ import { UserModule } from './user/user.module';
         // }),
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: 'REDIS_CLIENT',
+            async useFactory() {
+                const client = createClient({
+                    socket: {
+                        host: 'localhost',
+                        // port: '6379',
+                        // host: 'redis-container',
+                    },
+                });
+
+                await client.connect()
+                return client
+            },
+        },
+    ],
 })
 export class AppModule {}
